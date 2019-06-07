@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/themes/prism.min.css">
+    <link rel="stylesheet" href="css/bootstrap-vertical-menu.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Bootstrap Vertical Menu</title>
+
+    <style>
+        h1{ margin-top: 80px; }
+        h2,h3{ margin-top: 40px; }
+        .example{ border: 4px solid #eee; margin-bottom:30px;}
+        .example-preview{ padding: 1.5rem; }
+        .example > pre{ border-top: 4px solid #eee;margin:0; }
+        .highlihgt-grid .row + .row{ margin-top: 1rem;}
+        .highlihgt-grid [class^="col-"]{
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            background-color: rgba(86,61,124,.15);
+            border: 1px solid rgba(86,61,124,.2);
+        }
+    </style>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-1746437125043617",
+              enable_page_level_ads: true
+         });
+    </script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+        <a class="navbar-brand" href="#">Bootstrap Vertical Menu</a>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/iqbalfn/bootstrap-vertical-menu">Github</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/iqbalfn/bootstrap-vertical-menu/releases">Download</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h1>Vertical Menu</h1>
+                <p class="lead">Use Bootstrap's Javascript vertical menu plugin to add vertical navigation menu to your site.</p>
+
+                <section>
+                    <h2>About</h2>
+                    <article>
+                        <p>The plugin is heavy modification of bootsrap default collapse plugin to support styling vertical menu. The menu don't set width of the component, so it stick with width of the parent where this component placed. It has two theme which is <code>.vertical-menu-light</code> for light theme and <code>.vertical-menu-dark</code> for dark theme.</p>
+                        
+                        <p>By default, there's no indentation for submenu so it support unlimited submenu. The different between each level of submenu is the background color.</p>
+
+                        <p>Things to know before using the component</p>
+
+                        <ol>
+                            <li>There's no fallback if the icon not exists. Add an empty <code>&lt;i&gt;</code> to the item without icon to make them look parallel in along with item with icon.</li>
+                            <li>The arrow icon use FontAwesone 4.7.0. Please update css properly if you use different version or different icon set.</li>
+                            <li>The container should use <code>.vertical-menu</code> class followed by the theme class which is <code>.vertical-menu-light</code> or <code>.vertical-menu-dark</code>.</li>
+                            <li>Add class <code>.vertical-menu-parent</code> to the <code>&lt;li&gt;</code> element if there's submenu for it.</li>
+                            <li>Add class <code>.active</code> to the <code>&lt;li&gt;</code> to set menu as active, and add class <code>.show</code> to show exists submenu.</li>
+                        </ol>
+                    </article>
+                </section>
+
+                <section>
+                    <h2>Examples</h2>
+                    <article>
+                        <section>
+                            <h3>Vertical Menu Components</h3>
+
+                            <article>
+                                <p>Create a <code>.vertical-menu</code> element as the very top container for the menu. Followed by the theme to use for the menu that can be <code>.vertical-menu-light</code> or <code>.vertical-menu-dark</code>. The first and only child of <code>.vertical-menu</code> element is an <code>&lt;ul&gt;</code> that hold all top menu.</p>
+
+                                <div class="example">
+                                    <div class="example-preview source-code" data-hl="html" style="background: #eee;">
+                                        <div class="vertical-menu vertical-menu-light" style="width:270px;">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                                        Introduction
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-th-large" aria-hidden="true"></i>
+                                                        Layout
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-indent" aria-hidden="true"></i>
+                                                        Content
+                                                    </a>
+                                                </li>
+                                                <li class="vertical-menu-parent">
+                                                    <a href="#" data-toggle="vertical-menu">
+                                                        <i class="fa fa-puzzle-piece" aria-hidden="true"></i>
+                                                        Components
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i aria-hidden="true"></i>
+                                                                Alerts
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i aria-hidden="true"></i>
+                                                                Breadcrumb
+                                                            </a>
+                                                        </li>
+                                                        <li class="vertical-menu-parent">
+                                                            <a href="#" data-toggle="vertical-menu">
+                                                                <i aria-hidden="true"></i>
+                                                                Forms
+                                                            </a>
+                                                            <ul>
+                                                                <li class="vertical-menu-parent">
+                                                                    <a href="#" data-toggle="vertical-menu">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Buttons
+                                                                    </a>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                <i aria-hidden="true"></i>
+                                                                                Button group</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                <i aria-hidden="true"></i>
+                                                                                Button sizing</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                <i aria-hidden="true"></i>
+                                                                                Button outline</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Inputs</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Input groups</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Select</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+                                                        Utilities
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                                        Extends
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-share-square-o" aria-hidden="true"></i>
+                                                        Migration
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                                                        About
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </section>
+
+                        <section>
+                            <h3>Dark Theme</h3>
+
+                            <article>
+                                <p>Use class <code>.vertical-menu-dark</code> to the <code>.vertical-menu</code> to implement dark theme.</p>
+
+                                <div class="example">
+                                    <div class="example-preview source-code" data-hl="html">
+                                        <div class="vertical-menu vertical-menu-dark" style="width:270px;">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-play-circle" aria-hidden="true"></i>
+                                                        Introduction
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-th-large" aria-hidden="true"></i>
+                                                        Layout
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-indent" aria-hidden="true"></i>
+                                                        Content
+                                                    </a>
+                                                </li>
+                                                <li class="vertical-menu-parent">
+                                                    <a href="#" data-toggle="vertical-menu">
+                                                        <i class="fa fa-puzzle-piece" aria-hidden="true"></i>
+                                                        Components
+                                                    </a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i aria-hidden="true"></i>
+                                                                Alerts
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i aria-hidden="true"></i>
+                                                                Breadcrumb
+                                                            </a>
+                                                        </li>
+                                                        <li class="vertical-menu-parent">
+                                                            <a href="#" data-toggle="vertical-menu">
+                                                                <i aria-hidden="true"></i>
+                                                                Forms
+                                                            </a>
+                                                            <ul>
+                                                                <li class="vertical-menu-parent">
+                                                                    <a href="#" data-toggle="vertical-menu">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Buttons
+                                                                    </a>
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                <i aria-hidden="true"></i>
+                                                                                Button group</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                <i aria-hidden="true"></i>
+                                                                                Button sizing</a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#">
+                                                                                <i aria-hidden="true"></i>
+                                                                                Button outline</a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Inputs</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Input groups</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <i aria-hidden="true"></i>
+                                                                        Select</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-arrows-alt" aria-hidden="true"></i>
+                                                        Utilities
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-plus-square" aria-hidden="true"></i>
+                                                        Extends
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-share-square-o" aria-hidden="true"></i>
+                                                        Migration
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                                                        About
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </section>
+                    </article>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js" data-manual></script>
+    <script src="js/source.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="js/bootstrap-vertical-menu.js"></script>
+
+    <script>
+        $('.vertical-menu a').click(function(e){
+            var a = $(this);
+            var parent = a.parent();
+            if(!parent.hasClass('vertical-menu-parent'))
+                e.preventDefault();
+        })
+    </script>
+</body>
+</html>
