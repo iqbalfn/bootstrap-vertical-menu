@@ -77,7 +77,8 @@
     a{
         color: $vertical-menu-dark-link-color;
 
-        &:hover{
+        &:hover,
+        &:focus{
             color: $vertical-menu-dark-link-hover-color;
             background: $vertical-menu-dark-link-hover-bg;
         }
@@ -100,7 +101,8 @@
     a{
         color: $vertical-menu-light-link-color;
 
-        &:hover{
+        &:hover,
+        &:focus{
             color: $vertical-menu-light-link-hover-color;
             background: $vertical-menu-light-link-hover-bg;
         }

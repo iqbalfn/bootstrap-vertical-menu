@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap Vertical Menu (v0.0.1): vertical-menu.js
+ * Bootstrap Vertical Menu (v0.0.2): vertical-menu.js
  * --------------------------------------------------------------------------
  */
 
@@ -14,14 +14,19 @@ import Util from './util'
  */
 
 const NAME                = 'vertmenu'
-const VERSION             = '0.0.1'
+const VERSION             = '0.0.2'
 const DATA_KEY            = 'bs.vertmenu'
 const EVENT_KEY           = `.${DATA_KEY}`
 const DATA_API_KEY        = '.data-api'
 const JQUERY_NO_CONFLICT  = $.fn[NAME]
 
+const ARROW_LEFT_KEYCODE       = 37 // KeyboardEvent.which value for left arrow key
+const ARROW_UP_KEYCODE         = 38 // KeyboardEvent.which value for up arrow key
+const ARROW_RIGHT_KEYCODE      = 39 // KeyboardEvent.which value for right arrow key
+const ARROW_DOWN_KEYCODE       = 40 // KeyboardEvent.which value for down arrow key
+
 const Default = {
-  toggle : true
+  toggle : false
 }
 
 const DefaultType = {
@@ -29,22 +34,26 @@ const DefaultType = {
 }
 
 const Event = {
-  SHOW           : `show${EVENT_KEY}`,
-  SHOWN          : `shown${EVENT_KEY}`,
-  HIDE           : `hide${EVENT_KEY}`,
-  HIDDEN         : `hidden${EVENT_KEY}`,
-  CLICK_DATA_API : `click${EVENT_KEY}${DATA_API_KEY}`
+  SHOW              : `show${EVENT_KEY}`,
+  SHOWN             : `shown${EVENT_KEY}`,
+  HIDE              : `hide${EVENT_KEY}`,
+  HIDDEN            : `hidden${EVENT_KEY}`,
+  CLICK_DATA_API    : `click${EVENT_KEY}${DATA_API_KEY}`,
+  KEYDOWN_DATA_API  : `keydown${EVENT_KEY}${DATA_API_KEY}`,
 }
 
 const ClassName = {
-  SHOW     : 'show',
-  COLLAPSE   : 'collapse',
-  COLLAPSING : 'collapsing',
-  COLLAPSED  : 'collapsed'
+  COLLAPSE      : 'collapse',
+  COLLAPSING    : 'collapsing',
+  COLLAPSED     : 'collapsed',
+  MENU          : 'vertical-menu',
+  MENU_PARENT   : 'vertical-menu-parent',
+  SHOW          : 'show',
 }
 
 const Selector = {
-  DATA_TOGGLE : '[data-toggle="vertical-menu"]'
+  DATA_TOGGLE   : '[data-toggle="vertical-menu"]',
+  MENU          : `.${ClassName.MENU}`
 }
 
 /**
@@ -187,6 +196,46 @@ class VerticalMenu {
 
     // Static
 
+    static _dataApiKeydownHandler(event){
+        let target      = event.target
+        let parent      = target.parentNode
+        let siblingUl   = $(target).next('ul').get(0)
+
+        let parentSubed = parent.classList.contains(ClassName.MENU_PARENT)
+        let parentOpen  = parent.classList.contains(ClassName.SHOW)
+
+        let prevent   = false
+
+        switch(event.keyCode){
+            case ARROW_LEFT_KEYCODE:
+                // close the submeny
+                if(siblingUl && parentOpen)
+                    target.click()
+                
+                // focus parent link
+                else{
+                    let gParent = parent.parentNode.parentNode
+                    if(gParent.classList.contains(ClassName.MENU_PARENT))
+                        gParent.querySelector('a').focus()
+                }
+
+                prevent = true
+                break;
+
+            case ARROW_RIGHT_KEYCODE:
+                if(siblingUl && !parentOpen)
+                    target.click()
+                prevent = true
+                break;
+        }
+
+
+        if(prevent){
+            event.preventDefault()
+            event.stopPropagation()
+        }
+    }
+
     static _jQueryInterface(config) {
         return this.each(function () {
             const $this   = $(this)
@@ -196,6 +245,9 @@ class VerticalMenu {
                 ...$this.data(),
                 ...typeof config === 'object' && config ? config : {}
             }
+
+            if(_config.toggle && _config.toggle === 'vertical-menu')
+                _config.toggle = false;
 
             if (!data && _config.toggle && /show|hide/.test(config))
                 _config.toggle = false
@@ -228,10 +280,10 @@ $(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
 
   const $trigger = $(this)
   const $target  = $trigger.next('ul')
-  const data    = $target.data(DATA_KEY)
-  const config  = data ? 'toggle' : $trigger.data()
-  VerticalMenu._jQueryInterface.call($target, config)
+  VerticalMenu._jQueryInterface.call($target, 'toggle')
 })
+
+$(document).on(Event.KEYDOWN_DATA_API, Selector.MENU, VerticalMenu._dataApiKeydownHandler)
 
 /**
  * ------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 /*!
-  * Bootstrap Vertical Menu v0.0.1 (https://iqbalfn.github.io/bootstrap-vertical-menu/)
+  * Bootstrap Vertical Menu v0.0.2 (https://iqbalfn.github.io/bootstrap-vertical-menu/)
   * Copyright 2019 Iqbal Fauzi
-  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * Licensed under MIT (https://github.com/iqbalfn/bootstrap-vertical-menu/blob/master/LICENSE)
   */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jquery')) :
@@ -223,13 +223,17 @@
    */
 
   var NAME = 'vertmenu';
-  var VERSION = '0.0.1';
+  var VERSION = '0.0.2';
   var DATA_KEY = 'bs.vertmenu';
   var EVENT_KEY = "." + DATA_KEY;
   var DATA_API_KEY = '.data-api';
   var JQUERY_NO_CONFLICT = $.fn[NAME];
+  var ARROW_LEFT_KEYCODE = 37; // KeyboardEvent.which value for left arrow key
+
+  var ARROW_RIGHT_KEYCODE = 39; // KeyboardEvent.which value for right arrow key
+
   var Default = {
-    toggle: true
+    toggle: false
   };
   var DefaultType = {
     toggle: 'boolean'
@@ -239,16 +243,20 @@
     SHOWN: "shown" + EVENT_KEY,
     HIDE: "hide" + EVENT_KEY,
     HIDDEN: "hidden" + EVENT_KEY,
-    CLICK_DATA_API: "click" + EVENT_KEY + DATA_API_KEY
+    CLICK_DATA_API: "click" + EVENT_KEY + DATA_API_KEY,
+    KEYDOWN_DATA_API: "keydown" + EVENT_KEY + DATA_API_KEY
   };
   var ClassName = {
-    SHOW: 'show',
     COLLAPSE: 'collapse',
     COLLAPSING: 'collapsing',
-    COLLAPSED: 'collapsed'
+    COLLAPSED: 'collapsed',
+    MENU: 'vertical-menu',
+    MENU_PARENT: 'vertical-menu-parent',
+    SHOW: 'show'
   };
   var Selector = {
-    DATA_TOGGLE: '[data-toggle="vertical-menu"]'
+    DATA_TOGGLE: '[data-toggle="vertical-menu"]',
+    MENU: "." + ClassName.MENU
     /**
      * ------------------------------------------------------------------------
      * Class Definition
@@ -345,6 +353,37 @@
     } // Static
     ;
 
+    VerticalMenu._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
+      var target = event.target;
+      var parent = target.parentNode;
+      var siblingUl = $(target).next('ul').get(0);
+      var parentSubed = parent.classList.contains(ClassName.MENU_PARENT);
+      var parentOpen = parent.classList.contains(ClassName.SHOW);
+      var prevent = false;
+
+      switch (event.keyCode) {
+        case ARROW_LEFT_KEYCODE:
+          // close the submeny
+          if (siblingUl && parentOpen) target.click(); // focus parent link
+          else {
+              var gParent = parent.parentNode.parentNode;
+              if (gParent.classList.contains(ClassName.MENU_PARENT)) gParent.querySelector('a').focus();
+            }
+          prevent = true;
+          break;
+
+        case ARROW_RIGHT_KEYCODE:
+          if (siblingUl && !parentOpen) target.click();
+          prevent = true;
+          break;
+      }
+
+      if (prevent) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
     VerticalMenu._jQueryInterface = function _jQueryInterface(config) {
       return this.each(function () {
         var $this = $(this);
@@ -352,6 +391,7 @@
 
         var _config = _objectSpread({}, Default, $this.data(), typeof config === 'object' && config ? config : {});
 
+        if (_config.toggle && _config.toggle === 'vertical-menu') _config.toggle = false;
         if (!data && _config.toggle && /show|hide/.test(config)) _config.toggle = false;
 
         if (!data) {
@@ -395,11 +435,10 @@
 
     var $trigger = $(this);
     var $target = $trigger.next('ul');
-    var data = $target.data(DATA_KEY);
-    var config = data ? 'toggle' : $trigger.data();
 
-    VerticalMenu._jQueryInterface.call($target, config);
+    VerticalMenu._jQueryInterface.call($target, 'toggle');
   });
+  $(document).on(Event.KEYDOWN_DATA_API, Selector.MENU, VerticalMenu._dataApiKeydownHandler);
   /**
    * ------------------------------------------------------------------------
    * jQuery

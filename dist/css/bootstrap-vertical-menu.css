@@ -1,8 +1,8 @@
 @charset "UTF-8";
 /*!
- * Bootstrap Vertical Menu v0.0.1 (https://iqbalfn.github.io/bootstrap-vertical-menu/)
+ * Bootstrap Vertical Menu v0.0.2 (https://iqbalfn.github.io/bootstrap-vertical-menu/)
  * Copyright 2019 Iqbal Fauzi
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * Licensed under MIT (https://github.com/iqbalfn/bootstrap-vertical-menu/blob/master/LICENSE)
  */
 .vertical-menu ul {
   margin: 0;
@@ -69,7 +69,7 @@
   color: rgba(158, 158, 158, 0.9);
 }
 
-.vertical-menu-dark a:hover {
+.vertical-menu-dark a:hover, .vertical-menu-dark a:focus {
   color: rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.05);
 }
@@ -90,7 +90,7 @@
   color: rgba(117, 117, 117, 0.9);
 }
 
-.vertical-menu-light a:hover {
+.vertical-menu-light a:hover, .vertical-menu-light a:focus {
   color: #424242;
   background: rgba(33, 33, 33, 0.05);
 }
