@@ -230,7 +230,11 @@
   var JQUERY_NO_CONFLICT = $.fn[NAME];
   var ARROW_LEFT_KEYCODE = 37; // KeyboardEvent.which value for left arrow key
 
+  var ARROW_UP_KEYCODE = 38; // KeyboardEvent.which value for up arrow key
+
   var ARROW_RIGHT_KEYCODE = 39; // KeyboardEvent.which value for right arrow key
+
+  var ARROW_DOWN_KEYCODE = 40; // KeyboardEvent.which value for down arrow key
 
   var Default = {
     toggle: false
@@ -353,28 +357,158 @@
     } // Static
     ;
 
-    VerticalMenu._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
+    VerticalMenu._handleDownKey = function _handleDownKey(event) {
+      //   a
+      //      b
+      //          c <--           ( you're here )
+      //              d           ( 1 )
+      //              d1
+      //              d2
+      //          c1              ( 2 )
+      //          c2
+      //      b1                  ( 3 )
+      //      b2
+      //   a1                     ( 4 )
+      //   a2
       var target = event.target;
       var parent = target.parentNode;
-      var siblingUl = $(target).next('ul').get(0);
-      var parentSubed = parent.classList.contains(ClassName.MENU_PARENT);
+      var siblingUl = target.nextElementSibling;
       var parentOpen = parent.classList.contains(ClassName.SHOW);
+      var next; // ( 1 )
+
+      if (siblingUl && parentOpen) next = $(parent).find('> ul >li:first-child > a').get(0); // ( 2,3,4 )
+
+      if (!next) {
+        // let find next menu item
+        var cTarget = target;
+
+        while (true) {
+          var cParent = cTarget.parentNode; // li
+
+          var CPNext = cParent.nextElementSibling; // li:next
+
+          if (CPNext) {
+            next = $(CPNext).children('a').get(0);
+            break;
+          }
+
+          var cPParent = cParent.parentNode; // ul
+
+          var cPPLi = cPParent.parentNode; // li?
+
+          if (cPPLi.tagName != 'LI' || cPPLi.classList.contains(ClassName.MENU)) break;
+          cTarget = $(cPPLi).children('a').get(0);
+          if (cTarget) continue;
+          break;
+        }
+      }
+
+      if (next) next.focus();
+      return true;
+    };
+
+    VerticalMenu._handleLeftKey = function _handleLeftKey(event) {
+      var target = event.target;
+      var parent = target.parentNode;
+      var siblingUl = target.nextElementSibling;
+      var parentOpen = parent.classList.contains(ClassName.SHOW);
+
+      if (siblingUl && parentOpen) {
+        target.click();
+      } else {
+        var gParent = parent.parentNode.parentNode;
+        if (gParent.classList.contains(ClassName.MENU_PARENT)) $(gParent).children('a').focus();
+      }
+
+      return true;
+    };
+
+    VerticalMenu._handleRightKey = function _handleRightKey(event) {
+      var target = event.target;
+      var parent = target.parentNode;
+      var siblingUl = target.nextElementSibling;
+      var parentOpen = parent.classList.contains(ClassName.SHOW);
+      if (siblingUl && !parentOpen) target.click();
+      return true;
+    };
+
+    VerticalMenu._handleUpKey = function _handleUpKey(event) {
+      //   a
+      //   a1                             ( 5 )
+      //      b
+      //      b1
+      //      b2                          ( 4 )
+      //          c
+      //          c1
+      //          c2                      ( 3 )
+      //              d
+      //              d1
+      //              d2                  ( 2 )
+      //   a2                             ( 1 )
+      //   a3                 <!--        ( you're here )
+      var target = event.target; // a
+
+      var parent = target.parentNode; // li
+
+      var prev;
+      var prevParent = parent.previousElementSibling;
+
+      if (prevParent) {
+        var hasChildren = prevParent.classList.contains(ClassName.MENU_PARENT);
+        var isOpen = prevParent.classList.contains(ClassName.SHOW);
+
+        if (hasChildren && isOpen) {
+          var nextParent = prevParent;
+
+          while (true) {
+            var nextPUl = $(nextParent).children('ul').get(0);
+            var lastNPUlLI = nextPUl.lastElementChild;
+            if (!lastNPUlLI) break;
+
+            var _hasChildren = lastNPUlLI.classList.contains(ClassName.MENU_PARENT);
+
+            var _isOpen = lastNPUlLI.classList.contains(ClassName.SHOW);
+
+            if (!_hasChildren || !_isOpen) {
+              prev = $(lastNPUlLI).children('a').get(0);
+              break;
+            }
+
+            nextParent = lastNPUlLI;
+          }
+        } else {
+          prev = $(prevParent).children('a').get(0);
+        }
+      } else {
+        var pParent = parent.parentNode; // ul
+
+        var pPLi = pParent.parentNode; // li
+
+        if (pPLi.tagName === 'LI' && !pPLi.classList.contains(ClassName.MENU)) prev = $(pPLi).children('a');
+      }
+
+      if (prev) prev.focus();
+      return true;
+    };
+
+    VerticalMenu._dataApiKeydownHandler = function _dataApiKeydownHandler(event) {
       var prevent = false;
 
       switch (event.keyCode) {
+        case ARROW_DOWN_KEYCODE:
+          prevent = VerticalMenu._handleDownKey(event);
+          break;
+
         case ARROW_LEFT_KEYCODE:
-          // close the submeny
-          if (siblingUl && parentOpen) target.click(); // focus parent link
-          else {
-              var gParent = parent.parentNode.parentNode;
-              if (gParent.classList.contains(ClassName.MENU_PARENT)) gParent.querySelector('a').focus();
-            }
-          prevent = true;
+          prevent = VerticalMenu._handleLeftKey(event);
           break;
 
         case ARROW_RIGHT_KEYCODE:
-          if (siblingUl && !parentOpen) target.click();
-          prevent = true;
+          prevent = VerticalMenu._handleRightKey(event);
+          break;
+
+        case ARROW_UP_KEYCODE:
+          prevent = VerticalMenu._handleUpKey(event);
           break;
       }
 

@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------
- * Bootstrap Vertical Menu (v0.0.2): vertical-menu.js
+ * Bootstrap Vertical Menu (v0.0.3): vertical-menu.js
  * --------------------------------------------------------------------------
  */
 
@@ -14,7 +14,7 @@ import Util from './util'
  */
 
 const NAME                = 'vertmenu'
-const VERSION             = '0.0.2'
+const VERSION             = '0.0.3'
 const DATA_KEY            = 'bs.vertmenu'
 const EVENT_KEY           = `.${DATA_KEY}`
 const DATA_API_KEY        = '.data-api'
@@ -196,36 +196,169 @@ class VerticalMenu {
 
     // Static
 
-    static _dataApiKeydownHandler(event){
+    static _handleDownKey(event){
+        //   a
+        //      b
+        //          c <--           ( you're here )
+        //              d           ( 1 )
+        //              d1
+        //              d2
+        //          c1              ( 2 )
+        //          c2
+        //      b1                  ( 3 )
+        //      b2
+        //   a1                     ( 4 )
+        //   a2
+        
         let target      = event.target
         let parent      = target.parentNode
-        let siblingUl   = $(target).next('ul').get(0)
-
-        let parentSubed = parent.classList.contains(ClassName.MENU_PARENT)
+        let siblingUl   = target.nextElementSibling
         let parentOpen  = parent.classList.contains(ClassName.SHOW)
 
-        let prevent   = false
+        let next;
 
-        switch(event.keyCode){
-            case ARROW_LEFT_KEYCODE:
-                // close the submeny
-                if(siblingUl && parentOpen)
-                    target.click()
-                
-                // focus parent link
-                else{
-                    let gParent = parent.parentNode.parentNode
-                    if(gParent.classList.contains(ClassName.MENU_PARENT))
-                        gParent.querySelector('a').focus()
+        // ( 1 )
+        if(siblingUl && parentOpen)
+            next = $(parent).find('> ul >li:first-child > a').get(0)
+
+        // ( 2,3,4 )
+        if(!next){
+            // let find next menu item
+            let cTarget = target
+            while(true){
+                let cParent  = cTarget.parentNode           // li
+                let CPNext   = cParent.nextElementSibling   // li:next
+
+                if(CPNext){
+                    next = $(CPNext).children('a').get(0)
+                    break
                 }
 
-                prevent = true
+                let cPParent = cParent.parentNode       // ul
+                let cPPLi    = cPParent.parentNode      // li?
+
+                if(cPPLi.tagName != 'LI' || cPPLi.classList.contains(ClassName.MENU))
+                    break
+
+                cTarget = $(cPPLi).children('a').get(0)
+                if(cTarget)
+                    continue
+                break
+            }
+        }
+
+        if(next)
+            next.focus()
+
+        return true;
+    }
+
+    static _handleLeftKey(event){
+        let target      = event.target
+        let parent      = target.parentNode
+        let siblingUl   = target.nextElementSibling
+        let parentOpen  = parent.classList.contains(ClassName.SHOW)
+
+        if(siblingUl && parentOpen){
+            target.click()
+
+        }else{
+            let gParent = parent.parentNode.parentNode
+            if(gParent.classList.contains(ClassName.MENU_PARENT))
+                $(gParent).children('a').focus()
+        }
+
+        return true
+    }
+
+    static _handleRightKey(event){
+        let target      = event.target
+        let parent      = target.parentNode
+        let siblingUl   = target.nextElementSibling
+        let parentOpen  = parent.classList.contains(ClassName.SHOW)
+
+        if(siblingUl && !parentOpen)
+            target.click()
+
+        return true
+    }
+
+    static _handleUpKey(event){
+        //   a
+        //   a1                             ( 5 )
+        //      b
+        //      b1
+        //      b2                          ( 4 )
+        //          c
+        //          c1
+        //          c2                      ( 3 )
+        //              d
+        //              d1
+        //              d2                  ( 2 )
+        //   a2                             ( 1 )
+        //   a3                 <!--        ( you're here )
+
+        let target      = event.target          // a
+        let parent      = target.parentNode     // li
+
+        let prev
+
+        let prevParent  = parent.previousElementSibling
+        if(prevParent){
+            let hasChildren = prevParent.classList.contains(ClassName.MENU_PARENT)
+            let isOpen      = prevParent.classList.contains(ClassName.SHOW)
+
+            if(hasChildren && isOpen){
+                let nextParent = prevParent
+                while(true){
+                    let nextPUl     = $(nextParent).children('ul').get(0)
+                    let lastNPUlLI  = nextPUl.lastElementChild
+                    if(!lastNPUlLI)
+                        break
+
+                    let hasChildren = lastNPUlLI.classList.contains(ClassName.MENU_PARENT)
+                    let isOpen      = lastNPUlLI.classList.contains(ClassName.SHOW)
+
+                    if(!hasChildren || !isOpen){
+                        prev = $(lastNPUlLI).children('a').get(0)
+                        break
+                    }
+
+                    nextParent = lastNPUlLI
+                }
+            }else{
+                prev = $(prevParent).children('a').get(0)
+            }
+        }else{
+            let pParent = parent.parentNode     // ul
+            let pPLi    = pParent.parentNode    // li
+            if(pPLi.tagName === 'LI' && !pPLi.classList.contains(ClassName.MENU))
+                prev = $(pPLi).children('a')
+        }
+
+        if(prev)
+            prev.focus()
+
+        return true;
+    }
+
+    static _dataApiKeydownHandler(event){
+        let prevent = false
+        switch(event.keyCode){
+            case ARROW_DOWN_KEYCODE:
+                prevent = VerticalMenu._handleDownKey(event)
+                break;
+
+            case ARROW_LEFT_KEYCODE:
+                prevent = VerticalMenu._handleLeftKey(event)
                 break;
 
             case ARROW_RIGHT_KEYCODE:
-                if(siblingUl && !parentOpen)
-                    target.click()
-                prevent = true
+                prevent = VerticalMenu._handleRightKey(event)
+                break;
+
+            case ARROW_UP_KEYCODE:
+                prevent = VerticalMenu._handleUpKey(event)
                 break;
         }
 
